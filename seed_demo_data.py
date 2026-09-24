@@ -33,6 +33,30 @@ VULNERABILITIES = [
 ]
 
 
+# Raised-by identities are deliberately varied to make the demonstration dataset
+# resemble a real SOC workflow. Assignment/ownership remains independent.
+INCIDENT_RAISERS = [
+    ("joe.bloggs", "Joe Bloggs"),
+    ("steven.frypan", "Steven Frypan"),
+    ("natalie.airpod", "Natalie Airpod"),
+    ("priya.shah", "Priya Shah"),
+    ("marcus.green", "Marcus Green"),
+    ("steven.frypan", "Steven Frypan"),
+    ("natalie.airpod", "Natalie Airpod"),
+]
+
+VULNERABILITY_RAISERS = [
+    ("natalie.airpod", "Natalie Airpod"),
+    ("joe.bloggs", "Joe Bloggs"),
+    ("priya.shah", "Priya Shah"),
+    ("steven.frypan", "Steven Frypan"),
+    ("marcus.green", "Marcus Green"),
+    ("joe.bloggs", "Joe Bloggs"),
+    ("natalie.airpod", "Natalie Airpod"),
+    ("priya.shah", "Priya Shah"),
+]
+
+
 def main():
     with app.app_context():
         db.create_all()
@@ -53,8 +77,24 @@ def main():
         db.session.commit()
 
         if Incident.query.count() or Vulnerability.query.count():
-            print("Demo data was not added because security records already exist.")
-            print("Use a fresh database if you want the standard demonstration dataset.")
+            # Safe one-off refresh for an already-seeded demo database. Only the
+            # standard demo references are touched; user-created records are left alone.
+            updated = 0
+            for idx, (username, full_name) in enumerate(INCIDENT_RAISERS, 1):
+                item = Incident.query.filter(Incident.incident_number.endswith(f"-{idx:04d}")).first()
+                if item and item.title == INCIDENTS[idx - 1][0]:
+                    item.raised_by_username = username
+                    item.raised_by_name = full_name
+                    updated += 1
+            for idx, (username, full_name) in enumerate(VULNERABILITY_RAISERS, 1):
+                item = Vulnerability.query.filter(Vulnerability.vulnerability_number.endswith(f"-{idx:04d}")).first()
+                if item and item.title == VULNERABILITIES[idx - 1][1]:
+                    item.raised_by_username = username
+                    item.raised_by_name = full_name
+                    updated += 1
+            db.session.commit()
+            print(f"Updated raised-by attribution on {updated} existing demo records.")
+            print("No user-created security records were changed.")
             return
 
         for idx, (title, description, category, severity, status, team, area, assets, source, impact_text, actions, days, hours) in enumerate(INCIDENTS, 1):
@@ -64,8 +104,9 @@ def main():
                 category=category, occurred_at=created - timedelta(hours=1), raised_at=created,
                 impacted_area=area, affected_assets=assets, detection_source=source,
                 business_impact=impact_text, immediate_actions=actions, responsible_team=team,
-                severity=severity, status=status, owner=["joe.bloggs", "steven.frypan", "natalie.airpod", "priya.shah", "marcus.green"][idx % 5], raised_by_username="joe.bloggs",
-                raised_by_name="Joe Bloggs", created_at=created, updated_at=created,
+                severity=severity, status=status, owner=["joe.bloggs", "steven.frypan", "natalie.airpod", "priya.shah", "marcus.green"][idx % 5],
+                raised_by_username=INCIDENT_RAISERS[idx - 1][0],
+                raised_by_name=INCIDENT_RAISERS[idx - 1][1], created_at=created, updated_at=created,
             ))
 
         for idx, (cve, title, description, likelihood, impact, status, team, area, assets, source, remediation, days, hours) in enumerate(VULNERABILITIES, 1):
@@ -76,8 +117,9 @@ def main():
                 description=description, impacted_area=area, affected_assets=assets, source=source,
                 responsible_team=team, remediation_due=(created + timedelta(days=30)).date(),
                 likelihood=likelihood, impact=impact, risk_score=score, severity=severity, status=status,
-                owner=["natalie.airpod", "priya.shah", "marcus.green", "steven.frypan", "joe.bloggs"][idx % 5], remediation=remediation, raised_at=created, raised_by_username="natalie.airpod",
-                raised_by_name="Natalie Airpod", created_at=created, updated_at=created,
+                owner=["natalie.airpod", "priya.shah", "marcus.green", "steven.frypan", "joe.bloggs"][idx % 5], remediation=remediation, raised_at=created,
+                raised_by_username=VULNERABILITY_RAISERS[idx - 1][0],
+                raised_by_name=VULNERABILITY_RAISERS[idx - 1][1], created_at=created, updated_at=created,
             ))
 
         db.session.add(AuditLog(username="System", action="Seed demo data", record_type="Demo Dataset",
