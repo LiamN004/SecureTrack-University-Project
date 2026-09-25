@@ -70,14 +70,3 @@ Running `python seed_demo_data.py` creates fictional users for assignment/demo t
 - `marcus.green` — Marcus Green — Analyst
 
 All seeded demo accounts use the development-only password `SecureTrackDemo123!`. For real-world use, this would be changed. The assignment dropdowns are populated dynamically from the `User` table rather than from a hard-coded list.
-
-## Seeded demonstration users
-`python seed_demo_data.py` creates fictional users as well as sample security records:
-- `admin` — System Administrator — Admin
-- `joe.bloggs` — Joe Bloggs — Analyst
-- `steven.frypan` — Steven Frypan — Analyst
-- `natalie.airpod` — Natalie Airpod — Analyst
-- `priya.shah` — Priya Shah — Analyst
-- `marcus.green` — Marcus Green — Analyst
-
-All seeded demo accounts use the development-only password `SecureTrackDemo123!`. The assignment dropdowns are populated dynamically from the User database table.
