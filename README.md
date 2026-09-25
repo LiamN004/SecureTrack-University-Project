@@ -14,23 +14,25 @@ SecureTrack is a Flask-based cybersecurity incident and vulnerability management
 - Audit/activity log
 - Server-side validation
 
+## Accessing the Deployed Application
+
+SecureTrack has been deployed as a live web application, allowing the completed system to be accessed and tested through a standard web browser without requiring any local installation or development software. The application is hosted using Render and uses a deployed PostgreSQL database for persistent data storage, demonstrating the distributed architecture described within this report. The live deployment can be accessed at: 
+WEBSITE URL --> PLEASE SEE LINK PROVIDED IN THE ASSIGNMENT BRIEF.
+
+As SecureTrack is hosted using Render's free service plan, the application may enter an inactive state when it has not been accessed for a period of time. Therefore, when the deployment link is first opened, the website may take a couple of minutes to become available while the hosted service starts. If the page does not immediately load, please allow a short period for the service to initialise before refreshing the page. Once running, the application can be used normally to test the implemented functionality, including authentication, incident and vulnerability management, assignment, risk scoring, remediation tracking, filtering and activity history. Account login details for the website are listed below. 
+
 ## Run locally
 
-```powershell
-python -m venv venv
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
-.\venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-python app.py
-```
+An offline backup version of SecureTrack is also available as a contingency should the live hosted deployment be temporarily unavailable. The offline package can be downloaded from:
+GOOGLE DRIVE LINK –-> PLEASE SEE LINK PROVIDED IN THE ASSIGNMENT BRIEF.
 
-Open `http://127.0.0.1:5000`. The first registered account becomes the prototype Admin account.
+Full instructions explaining how to launch and access the local version of SecureTrack are included within the download.
 
-Local development uses SQLite automatically and stores the database under Flask's `instance` directory.
+The offline version is provided solely as a backup method of accessing and demonstrating the application. The recommended and primary method of accessing SecureTrack is through the live website deployment, as this represents the intended distributed implementation of the system and demonstrates the deployed web application and database architecture described throughout this report.
 
 ## Deployment configuration
 
-The project is prepared for a hosted Python service - Render:
+The project is prepared and used on a hosted Python service - Render:
 
 - `gunicorn` is included as the production WSGI server.
 - `DATABASE_URL` switches persistence from local SQLite to a hosted PostgreSQL database.
@@ -50,13 +52,15 @@ The seed script adds realistic fictional incidents and vulnerabilities, includin
 
 The script will not add records when incident or vulnerability data already exists, which prevents accidental duplicate datasets. All seeded records are fictional and are intended only for demonstration and testing.
 
+On the live deployment, this script has already been ran and "test" data is present within the website.
+
 ## Expanded incident and vulnerability records
 
-Incidents now include a generated incident reference, occurrence timestamp, system-raised timestamp, category, impacted area/estate, affected assets, detection source, business impact, immediate containment/actions, responsible team, owner, and the username/full name of the person who raised the record.
+Incidents include a generated incident reference, occurrence timestamp, system-raised timestamp, category, impacted area/estate, affected assets, detection source, business impact, immediate containment/actions, responsible team, owner, and the username/full name of the person who raised the record.
 
-Vulnerabilities now include a generated vulnerability reference, CVE number (or N/A for non-CVE/internal findings), impacted area/estate, affected assets, discovery source, responsible team, remediation due date, risk scoring, system-raised timestamp, and the username/full name of the person who raised the record.
+Vulnerabilities include a generated vulnerability reference, CVE number (or N/A for non-CVE/internal findings), impacted area/estate, affected assets, discovery source, responsible team, remediation due date, risk scoring, system-raised timestamp, and the username/full name of the person who raised the record.
 
-Registration requires first name, last name and username so records have meaningful attribution.
+Registration requires first name, last name and username so records have meaningful attribution. Please see demonstration uses below.
 
 
 ## Seeded demonstration users
@@ -70,3 +74,7 @@ Running `python seed_demo_data.py` creates fictional users for assignment/demo t
 - `marcus.green` — Marcus Green — Analyst
 
 All seeded demo accounts use the development-only password `SecureTrackDemo123!`. For real-world use, this would be changed. The assignment dropdowns are populated dynamically from the `User` table rather than from a hard-coded list.
+
+The username for the accounts is the first item provided in the list above:
+
+Ie: The admin accounts username is 'Admin'. Joe Bloggs' username is 'joe.bloggs'. All accounts share the same password for demonstrative purposes only: `SecureTrackDemo123!`
