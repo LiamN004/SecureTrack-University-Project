@@ -39,14 +39,6 @@ The project is prepared for a hosted Python service - Render:
 - Proxy headers are handled for HTTPS hosting.
 - `render.yaml` describes the web service and PostgreSQL database.
 
-## Notes to self for Render deployment (later)
-
-1. Push this project to a GitHub repository.
-2. In Render, create a Blueprint from the repository so `render.yaml` is detected.
-3. Review the proposed web service/database and deploy.
-4. Open the generated HTTPS URL and register the first Admin account.
-5. Create a separate marker/demo account if required.
-
 
 ## Demonstration / test data
 
